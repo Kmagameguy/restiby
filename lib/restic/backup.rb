@@ -16,6 +16,7 @@ module Restic
 
     def run!
       logger.reset
+      update_restic
       config.backends.each do |backend|
         self.current_backend = backend
         ENV["RESTIC_PASSWORD"] = current_backend.passkey
@@ -24,32 +25,42 @@ module Restic
         backup
         check
         diff_latest
+        notify_success
       end
       logger.info("Run completed.")
+    end
+
+    def update_restic
+      logger.info("Checking restic version...")
+      restic_command.update!
     end
 
     def init(backend = current_backend)
       return if File.exist?(File.join(backend.path, "config"))
 
       logger.info("Initializing repository")
-      logger.info(restic_command.init!(backend))
+      restic_command.init!(backend)
     end
 
     def backup(backend = current_backend)
       logger.info("Backup starting...")
-      logger.info(restic_command.backup!(backend))
+      restic_command.backup!(backend)
       logger.info("Backup complete")
     end
 
     def check(backend = current_backend)
       logger.info("Checking backups...")
-      logger.info(restic_command.check!(backend))
+      restic_command.check!(backend)
       logger.info("Check complete")
     end
 
     def diff_latest(backend = current_backend)
       logger.info("Computing diff of latest snapshot")
       logger.info(restic_command.diff_latest!(backend))
+    end
+
+    def notify_success
+      config.notifiers.each(&:notify_success!)
     end
 
     private

@@ -4,7 +4,7 @@ module Restic
   class Configuration
     DEFAULT_CONFIG_FILE = "restic-backup.yml"
 
-    attr_reader :backends
+    attr_reader :backends, :notifiers
 
     def self.load!
       new
@@ -12,17 +12,32 @@ module Restic
 
     def initialize
       @config = load_yaml
-      @locations = @config.dig(:locations) || {}
+      @all_locations = build_locations(@config.dig(:locations) || {})
       @backends  = build_backends(@config.dig(:backends) || {})
+      @notifiers = build_notifiers(@config.dig(:notifiers)) || []
     end
 
     private
 
-    attr_reader :locations
+    attr_reader :all_locations
+
+    def build_locations(location_hash)
+      location_hash.map do |location_name, location_properties|
+        Location.new(name: location_name, properties: location_properties)
+      end
+    end
 
     def build_backends(backends)
       backends.map do |name, properties|
-        Backend.new(name:, properties:, locations:)
+        Backend.new(name:, properties:, all_locations:)
+      end
+    end
+
+    def build_notifiers(notifiers)
+      notifiers.keys.map do |notifier_name|
+        klass_constant = notifier_name.to_s.split("_").map(&:capitalize).join("")
+        klass = Object.const_get("Restic::Notifiers::#{klass_constant}")
+        klass.new(webhook_url: notifiers[notifier_name][:webhook_url])
       end
     end
 

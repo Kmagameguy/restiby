@@ -19,7 +19,9 @@ module Restic
     private
 
     def log_file
-      File.open(log_file_path, "a")
+      file = File.open(log_file_path, "a")
+      file.sync = true
+      file
     end
 
     def log_file_path

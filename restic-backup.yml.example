@@ -1,8 +1,8 @@
 backends:
-  - nfs:
-      type: local
-      path: /home/user/my-restic-backup
-      passkey: set-your-own
+  # - nfs:
+      # type: local
+      # path: /home/user/my-restic-backup
+      # passkey: set-your-own
 
 extras:
   # exclude-file: .restic-backup.exclude
@@ -11,4 +11,10 @@ locations:
   # home:
     # from: /home/user
     # to:
-      - nfs
+      # - nfs
+
+notifiers:
+  # healthchecks_io:
+    # webhook_url: "https://example.com"
+  # discord:
+    # webhook_url: "https://example.com"

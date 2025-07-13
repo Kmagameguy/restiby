@@ -6,13 +6,19 @@ module Restic
       @executable = find_restic_binary
     end
 
+    def update!
+      return "Function only available on restic 0.18.0 and newer..." if restic_version < Gem::Version.new("0.18.0")
+
+      system!("restic self-update")
+    end
+
     def init!(backend)
       run!(command: INIT, options: { repo: backend.path })
     end
 
     def backup!(backend)
       backend.locations.each do |location|
-        run!(command: BACKUP, options: { repo: backend.path }, source: location)
+        run!(command: BACKUP, options: { repo: backend.path }, source: location.source)
       end
     end
 
@@ -21,7 +27,7 @@ module Restic
     end
 
     def diff_latest!(backend)
-      snapshots = get_latest_snapshots(backend)
+      snapshots = latest_snapshots(backend)
       return "Repository needs at least two snapshots to run this command..." if snapshots.count < 2
 
       run!(command: DIFF, options: { repo: backend.path, snapshots: snapshots })
@@ -31,7 +37,11 @@ module Restic
 
     attr_reader :executable
 
-    def get_latest_snapshots(backend)
+    def restic_version
+      @restic_version ||= Gem::Version.new(system!("restic version | awk '{print $2}'"))
+    end
+
+    def latest_snapshots(backend)
       JSON
         .parse(run!(command: "snapshots --json", options: { repo: backend.path }))
         .last(2)
