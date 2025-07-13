@@ -13,8 +13,8 @@ module Restic
     private
 
     def extract_locations(locations)
-      locations.select do |location|
-        location.to_sym == name.to_sym
+      locations.filter_map do |location_name, hash|
+        hash[:from] if hash[:to].map(&:to_sym).include?(name.to_sym)
       end
     end
   end

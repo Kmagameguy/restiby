@@ -4,7 +4,7 @@ module Restic
   class Configuration
     DEFAULT_CONFIG_FILE = "restic-backup.yml"
 
-    attr_reader :locations, :backends
+    attr_reader :backends
 
     def self.load!
       new
@@ -17,6 +17,8 @@ module Restic
     end
 
     private
+
+    attr_reader :locations
 
     def build_backends(backends)
       backends.map do |name, properties|

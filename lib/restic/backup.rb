@@ -23,7 +23,7 @@ module Restic
         init
         backup
         check
-        #diff_latest
+        diff_latest
       end
       logger.info("Run completed.")
     end
@@ -32,24 +32,24 @@ module Restic
       return if File.exist?(File.join(backend.path, "config"))
 
       logger.info("Initializing repository")
-      restic_command.init!(backend)
+      logger.info(restic_command.init!(backend))
     end
 
     def backup(backend = current_backend)
       logger.info("Backup starting...")
-      restic_command.backup!(backend)
+      logger.info(restic_command.backup!(backend))
       logger.info("Backup complete")
     end
 
     def check(backend = current_backend)
       logger.info("Checking backups...")
-      restic_command.check!(backend)
+      logger.info(restic_command.check!(backend))
       logger.info("Check complete")
     end
 
     def diff_latest(backend = current_backend)
       logger.info("Computing diff of latest snapshot")
-      restic_command.diff_latest!(backend)
+      logger.info(restic_command.diff_latest!(backend))
     end
 
     private

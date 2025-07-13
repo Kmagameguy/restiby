@@ -7,36 +7,47 @@ module Restic
     end
 
     def init!(backend)
-      run!(INIT, repo: backend.path)
+      run!(command: INIT, options: { repo: backend.path })
     end
 
     def backup!(backend)
       backend.locations.each do |location|
-        run!(BACKUP, repo: backend.path, source: location)
+        run!(command: BACKUP, options: { repo: backend.path }, source: location)
       end
     end
 
     def check!(backend)
-      run!(CHECK, repo: backend.path)
+      run!(command: CHECK, options: { repo: backend.path })
     end
 
     def diff_latest!(backend)
-      run!(DIFF, repo: backend.path)
+      snapshots = get_latest_snapshots(backend)
+      return "Repository needs at least two snapshots to run this command..." if snapshots.count < 2
+
+      run!(command: DIFF, options: { repo: backend.path, snapshots: snapshots })
     end
 
     private
 
     attr_reader :executable
 
-    def run!(command, options = {})
+    def get_latest_snapshots(backend)
+      JSON
+        .parse(run!(command: "snapshots --json", options: { repo: backend.path }))
+        .last(2)
+        .map { |snapshot| snapshot["id"]}
+    end
+
+    def run!(command:, options: {}, source: nil)
       arguments = [ "-v" ]
 
       options.each do |key, value|
-        arguments << "--#{key}" << value.to_s
+        arguments << "--#{key}" << value.to_s unless key == :snapshots
       end
 
       cmd = [executable, command] + arguments
-      cmd += options[:source] if options[:source]
+      cmd << source if !source.nil?
+      cmd << options[:snapshots][0] << options[:snapshots][1] if !options[:snapshots].nil?
       cmd = cmd.join(" ")
 
       system!(cmd)
