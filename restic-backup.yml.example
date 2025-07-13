@@ -1,0 +1,14 @@
+backends:
+  - nfs:
+      type: local
+      path: /home/user/my-restic-backup
+      key: set-your-own
+
+extras:
+  # exclude-file: .restic-backup.exclude
+
+locations:
+  # home:
+    # from: /home/user
+    # to:
+      - nfs
