@@ -11,14 +11,14 @@ module Restic
       @logger = logger
       @config = config
       @restic_command = restic_command
-      @current_backup_target = nil
+      @current_backend = nil
     end
 
     def run!
       logger.reset
       config.backends.each do |backend|
-        self.current_backup_target = BackupTarget.new(backend: backend, locations: config.locations)
-        ENV["RESTIC_PASSWORD"] = current_backup_target.backend.passkey
+        self.current_backend = backend
+        ENV["RESTIC_PASSWORD"] = current_backend.passkey
 
         init
         backup
@@ -28,33 +28,33 @@ module Restic
       logger.info("Run completed.")
     end
 
-    def init(backup_target = current_backup_target)
-      return if File.exist?(File.join(backup_target.backend.path, "config"))
+    def init(backend = current_backend)
+      return if File.exist?(File.join(backend.path, "config"))
 
       logger.info("Initializing repository")
-      restic_command.init!(backup_target)
+      restic_command.init!(backend)
     end
 
-    def backup(backup_target = current_backup_target)
+    def backup(backend = current_backend)
       logger.info("Backup starting...")
-      restic_command.backup!(backup_target)
+      restic_command.backup!(backend)
       logger.info("Backup complete")
     end
 
-    def check(backup_target = current_backup_target)
+    def check(backend = current_backend)
       logger.info("Checking backups...")
-      restic_command.check!(backup_target)
+      restic_command.check!(backend)
       logger.info("Check complete")
     end
 
-    def diff_latest(backup_target = current_backup_target)
+    def diff_latest(backend = current_backend)
       logger.info("Computing diff of latest snapshot")
-      restic_command.diff_latest!(backup_target)
+      restic_command.diff_latest!(backend)
     end
 
     private
 
-    attr_accessor :current_backup_target
+    attr_accessor :current_backend
     attr_reader :logger, :config, :restic_command
   end
 end

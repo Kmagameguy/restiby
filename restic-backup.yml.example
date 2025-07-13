@@ -2,7 +2,7 @@ backends:
   - nfs:
       type: local
       path: /home/user/my-restic-backup
-      key: set-your-own
+      passkey: set-your-own
 
 extras:
   # exclude-file: .restic-backup.exclude

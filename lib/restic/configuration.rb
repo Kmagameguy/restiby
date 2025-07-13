@@ -12,21 +12,15 @@ module Restic
 
     def initialize
       @config = load_yaml
-      @locations = build_locations(@config.dig(:locations) || {})
+      @locations = @config.dig(:locations) || {}
       @backends  = build_backends(@config.dig(:backends) || {})
     end
 
     private
 
-    def build_locations(locations)
-      locations.map do |name, properties|
-        Location.new(name:, properties:)
-      end
-    end
-
     def build_backends(backends)
       backends.map do |name, properties|
-        Backend.new(name:, properties:)
+        Backend.new(name:, properties:, locations:)
       end
     end
 

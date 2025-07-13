@@ -6,21 +6,22 @@ module Restic
       @executable = find_restic_binary
     end
 
-    def init!(backup_target)
-      run!(INIT, repo: backup_target.backend.path)
+    def init!(backend)
+      run!(INIT, repo: backend.path)
     end
 
-    def backup!(backup_target)
-      # TODO: Need to loop over locations and run backup on each
-      run!(BACKUP, repo: backup_target.backend.path, source: backup_target.locations)
+    def backup!(backend)
+      backend.locations.each do |location|
+        run!(BACKUP, repo: backend.path, source: location)
+      end
     end
 
-    def check!(backup_target)
-      run!(CHECK, repo: backup_target.backend.path)
+    def check!(backend)
+      run!(CHECK, repo: backend.path)
     end
 
-    def diff_latest!(backup_target)
-      run!(DIFF, repo: backup_target.backend.path)
+    def diff_latest!(backend)
+      run!(DIFF, repo: backend.path)
     end
 
     private
