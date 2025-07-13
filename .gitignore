@@ -1,0 +1,6 @@
+.DS_Store
+.restic-backup.exclude
+log/**/*
+restic-backup.yml
+
+!*.gitkeep
