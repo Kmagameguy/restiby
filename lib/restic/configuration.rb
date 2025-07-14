@@ -4,7 +4,7 @@ module Restic
   class Configuration
     DEFAULT_CONFIG_FILE = "restic-backup.yml"
 
-    attr_reader :backends, :notifiers
+    attr_reader :backends, :notifiers, :exclude_file
 
     def self.load!
       new
@@ -12,6 +12,7 @@ module Restic
 
     def initialize
       @config = load_yaml
+      @exclude_file = @config.dig(:extras, :exclude_file)
       @all_locations = build_locations(@config.dig(:locations) || {})
       @backends  = build_backends(@config.dig(:backends) || {})
       @notifiers = build_notifiers(@config.dig(:notifiers) || {})
@@ -29,7 +30,7 @@ module Restic
 
     def build_backends(backends)
       backends.map do |name, properties|
-        Backend.new(name:, properties:, all_locations:)
+        Backend.new(name:, properties:, all_locations:, exclude_file:)
       end
     end
 

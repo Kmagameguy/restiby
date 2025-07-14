@@ -19,7 +19,12 @@ module Restic
 
     def backup!(backend)
       backend.locations.each do |location|
-        run!(command: BACKUP, options: { repo: backend.path }, source: location.source)
+        options = {}.tap do |opts|
+          opts[:repo] = backend.path
+          opts[:exclude_file] = backend.exclude_file unless backend.exclude_file.nil?
+        end
+
+        run!(command: BACKUP, options: options, source: location.source)
       end
     end
 
@@ -60,13 +65,15 @@ module Restic
       arguments = [ "-v" ]
 
       options.each do |key, value|
-        arguments << "--#{key}" << value.to_s unless key == :snapshots
+        arguments << "--#{key.to_s.tr("_", "-")}" << value.to_s unless key == :snapshots
       end
 
       cmd = [executable, command] + arguments
       cmd << source if !source.nil?
       cmd << options[:snapshots][0] << options[:snapshots][1] if !options[:snapshots].nil?
       cmd = cmd.join(" ")
+
+      pp cmd
 
       system!(cmd)
     end
