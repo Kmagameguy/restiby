@@ -1,11 +1,11 @@
 backends:
-  # - nfs:
-      # type: local
-      # path: /home/user/my-restic-backup
-      # passkey: set-your-own
+  # nfs:
+    # type: local
+    # path: /home/user/my-restic-backup
+    # passkey: set-your-own
 
 extras:
-  # exclude-file: .restiby.exclude
+  # exclude_file: .restiby.exclude
 
 locations:
   # home:
