@@ -29,8 +29,9 @@ ruby restiby.rb --action backup
 
 ## Notes
 1. Depending on which directories you're trying to access, you may get permission errors.  Restic's documentation provides a guide which explains how to allow the restic binary to perform rootless backups:
-  - [Backing up your system without running restic as root][backup-without-root]
+    - [Backing up your system without running restic as root][backup-without-root]
 1. This project is still WIP.  Some of the features that I plan to develop are listed below.
+1. In designing this repo I want the dependencies to remain lightweight.  Therefore I've avoided relying on gems and libraries that aren't part of the ruby core library.
 
 ## Roadmap
 Desired features are listed below.  Note that they are in no particular order of importance.
