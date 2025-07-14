@@ -1,6 +1,6 @@
-module Restic
+module Restiby
   class Command
-    include ::Restic::Constants::Commands
+    include ::Restiby::Constants::Commands
 
     def initialize
       @executable = find_restic_binary
@@ -72,8 +72,6 @@ module Restic
       cmd << source if !source.nil?
       cmd << options[:snapshots][0] << options[:snapshots][1] if !options[:snapshots].nil?
       cmd = cmd.join(" ")
-
-      pp cmd
 
       system!(cmd)
     end

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-module Restic
+module Restiby
   class Logger
-    DEFAULT_LOG_NAME = "restic-backup.log"
+    DEFAULT_LOG_NAME = "restiby.log"
 
     def initialize
       @logger = ::Logger.new(MultiIO.new(STDOUT, log_file))

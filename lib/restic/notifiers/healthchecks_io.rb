@@ -1,4 +1,4 @@
-module Restic
+module Restiby
   module Notifiers
     # https://healthchecks.io
 

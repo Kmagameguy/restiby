@@ -1,4 +1,4 @@
-module Restic
+module Restiby
   module Notifiers
     class Base
       def initialize(webhook_url:)

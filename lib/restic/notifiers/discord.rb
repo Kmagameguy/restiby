@@ -1,4 +1,4 @@
-module Restic
+module Restiby
   module Notifiers
     class Discord < Base
       def notify_success!(params = {})
@@ -24,7 +24,7 @@ module Restic
       private
 
       def log
-        log_file = File.join(File.expand_path("../../../..", __FILE__), "log", "restic-backup.log")
+        log_file = File.join(File.expand_path("../../../..", __FILE__), "log", "restiby.log")
         content = File.read(log_file)
         content.length > 2000 ? content[-2000..-1] : content
       end

@@ -1,11 +1,11 @@
-module Restic
+module Restiby
   class Parser
-    include ::Restic::Constants::Commands
+    include ::Restiby::Constants::Commands
 
     def self.parse!
       options = {}
       parser = OptionParser.new do |opts|
-        opts.banner = "usage: restic-backup.rb [options]"
+        opts.banner = "usage: restiby.rb [options]"
         opts.on("-aACTION", "--action=ACTION", "Action to perform") do |action|
           options[:action] = action
         end
@@ -15,11 +15,11 @@ module Restic
 
       case options[:action]
       when BACKUP
-        Restic::Backup.run!
+        Restiby::Backup.run!
       when CHECK
-        # Restic::Check.run!
+        # Restiby::Check.run!
       when RESTORE
-        # Restic::Restore.run!
+        # Restiby::Restore.run!
       else
         raise ArgumentError, "Unknown action: #{options[:action]}"
       end 

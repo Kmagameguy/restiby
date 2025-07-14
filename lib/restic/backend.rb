@@ -1,4 +1,4 @@
-module Restic
+module Restiby
   class Backend
     attr_reader :name, :type, :path, :passkey, :locations, :exclude_file
 

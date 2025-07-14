@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-module Restic
+module Restiby
   class Configuration
-    DEFAULT_CONFIG_FILE = "restic-backup.yml"
+    DEFAULT_CONFIG_FILE = "restiby.yml"
 
     attr_reader :backends, :notifiers, :exclude_file
 
@@ -37,7 +37,7 @@ module Restic
     def build_notifiers(notifiers)
       notifiers.keys.map do |notifier_name|
         klass_constant = notifier_name.to_s.split("_").map(&:capitalize).join("")
-        klass = Object.const_get("Restic::Notifiers::#{klass_constant}")
+        klass = Object.const_get("Restiby::Notifiers::#{klass_constant}")
         klass.new(webhook_url: notifiers[notifier_name][:webhook_url])
       end
     end

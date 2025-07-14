@@ -1,4 +1,4 @@
-module Restic
+module Restiby
   class Location
     attr_reader :name, :source, :destinations
 

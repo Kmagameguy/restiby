@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Restic
+module Restiby
   module Constants
     module Commands
       BACKUP = "backup"

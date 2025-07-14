@@ -22,4 +22,4 @@ require_relative "lib/restic/notifiers/discord"
 require_relative "lib/restic/notifiers/healthchecks_io"
 require_relative "lib/restic/parser"
 
-Restic::Parser.parse!
+Restiby::Parser.parse!

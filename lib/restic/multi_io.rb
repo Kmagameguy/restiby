@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # https://stackoverflow.com/questions/6407141/how-can-i-have-ruby-logger-log-output-to-stdout-as-well-as-file
-module Restic
+module Restiby
   class MultiIO
     def initialize(*targets)
       @targets = targets

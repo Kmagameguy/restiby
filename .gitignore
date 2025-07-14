@@ -1,6 +1,6 @@
 .DS_Store
-.restic-backup.exclude
+.restiby.exclude
 log/**/*
-restic-backup.yml
+restiby.yml
 
 !*.gitkeep

@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-module Restic
+module Restiby
   class Backup
     # Convenience method to just run w/defaults
     def self.run!
       new.run!
     end
 
-    def initialize(logger: ::Restic::Logger.new, config: Configuration.load!, restic_command: Command.new)
+    def initialize(logger: ::Restiby::Logger.new, config: Configuration.load!, restic_command: Command.new)
       @logger = logger
       @config = config
       @restic_command = restic_command

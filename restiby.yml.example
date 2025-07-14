@@ -5,7 +5,7 @@ backends:
       # passkey: set-your-own
 
 extras:
-  # exclude-file: .restic-backup.exclude
+  # exclude-file: .restiby.exclude
 
 locations:
   # home:
