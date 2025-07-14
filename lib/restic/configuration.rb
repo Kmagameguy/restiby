@@ -14,7 +14,7 @@ module Restic
       @config = load_yaml
       @all_locations = build_locations(@config.dig(:locations) || {})
       @backends  = build_backends(@config.dig(:backends) || {})
-      @notifiers = build_notifiers(@config.dig(:notifiers)) || []
+      @notifiers = build_notifiers(@config.dig(:notifiers) || {})
     end
 
     private
