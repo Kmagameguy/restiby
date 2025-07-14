@@ -5,6 +5,7 @@ require "json"
 require "logger"
 require "net/http"
 require "open3"
+require "optparse"
 require "ostruct"
 require "uri"
 require "yaml"
@@ -19,5 +20,6 @@ require_relative "lib/restic/backup"
 require_relative "lib/restic/notifiers/base"
 require_relative "lib/restic/notifiers/discord"
 require_relative "lib/restic/notifiers/healthchecks_io"
+require_relative "lib/restic/parser"
 
-Restic::Backup.run!
+Restic::Parser.parse!
