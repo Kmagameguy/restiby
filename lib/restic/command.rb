@@ -9,7 +9,8 @@ module Restic
     def update!
       return "Function only available on restic 0.18.0 and newer..." if restic_version < Gem::Version.new("0.18.0")
 
-      system!("restic self-update")
+      cmd = [executable, SELF_UPDATE].join(" ")
+      system!(cmd)
     end
 
     def init!(backend)
@@ -38,17 +39,24 @@ module Restic
     attr_reader :executable
 
     def restic_version
-      @restic_version ||= Gem::Version.new(system!("restic version | awk '{print $2}'"))
+      @restic_version ||= Gem::Version.new(find_restic_version)
+    end
+
+    def find_restic_version
+      cmd = [executable, VERSION].join(" ")
+      system!(cmd)
     end
 
     def latest_snapshots(backend)
       JSON
-        .parse(run!(command: "snapshots --json", options: { repo: backend.path }))
+        .parse(run!(command: JSON_SNAPSHOTS, options: { repo: backend.path }))
         .last(2)
         .map { |snapshot| snapshot["id"]}
     end
 
     def run!(command:, options: {}, source: nil)
+      raise ArgumentError, "Unregistered command: #{command}" unless valid_command?(command)
+
       arguments = [ "-v" ]
 
       options.each do |key, value|
@@ -64,7 +72,7 @@ module Restic
     end
 
     def find_restic_binary
-      system!("which restic")
+      system!(WHICH_RESTIC)
     end
 
     def system!(command)
@@ -75,6 +83,10 @@ module Restic
       else
         abort("Error: #{stderr}")
       end
+    end
+
+    def valid_command?(command)
+      REGISTERED_COMMANDS.include?(command)
     end
   end
 end
