@@ -68,20 +68,19 @@ module Restiby
         arguments << "--#{key.to_s.tr("_", "-")}" << value.to_s unless key == :snapshots
       end
 
-      cmd = [executable, command] + arguments
+      cmd = [executable] + command.to_s.split + arguments
       cmd << source if !source.nil?
-      cmd << options[:snapshots][0] << options[:snapshots][1] if !options[:snapshots].nil?
-      cmd = cmd.join(" ")
+      cmd += options[:snapshots] if !options[:snapshots].nil? && !options[:snapshots].empty?
 
-      system!(cmd)
+      system!(*cmd)
     end
 
     def find_restic_binary
       system!(WHICH_RESTIC)
     end
 
-    def system!(command)
-      stdout, stderr, status = Open3.capture3(command)
+    def system!(*command)
+      stdout, stderr, status = Open3.capture3(*command)
 
       if status.success?
         return stdout.strip
