@@ -35,7 +35,6 @@ ruby restiby.rb --action backup
 
 ## Roadmap
 Desired features are listed below.  Note that they are in no particular order of importance.
-- [ ] Add pruning functions
 - [ ] Handle restoring from snapshot(s)
 - [ ] Cloud-based backups
 - [ ] E-mail Notifications
