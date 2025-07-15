@@ -24,6 +24,7 @@ module Restiby
         init
         backup
         check
+        forget
         diff_latest
         notify_success
       end
@@ -52,6 +53,14 @@ module Restiby
       logger.info("Checking backups...")
       restic_command.check!(backend)
       logger.info("Check complete")
+    end
+
+    def forget(backend = current_backend)
+      return unless backend.locations.any?(&:forget?)
+
+      logger.info("Forgetting & pruning snapshots")
+      logger.info(restic_command.forget!(backend))
+      logger.info("Pruning complete")
     end
 
     def diff_latest(backend = current_backend)
