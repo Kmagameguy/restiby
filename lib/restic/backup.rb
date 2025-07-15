@@ -43,7 +43,7 @@ module Restiby
     end
 
     def backup(backend = current_backend)
-      logger.info("Backup starting...")
+      logger.info("Backup starting for #{backend.name}...")
       restic_command.backup!(backend)
       logger.info("Backup complete")
     end
