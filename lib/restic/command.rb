@@ -47,6 +47,14 @@ module Restiby
       end.join("\n--------\n")
     end
 
+    def forget!(backend)
+      backend.locations.map do |location|
+        next unless location.forget?
+
+        run!(command: FORGET, options: { repo: backend.path }.merge(location.forget_and_prune_policy))
+      end.compact.join("\n---------\n")
+    end
+
     private
 
     attr_reader :executable
@@ -78,8 +86,10 @@ module Restiby
       arguments = [ "-v" ]
 
       options.each do |key, value|
-        arguments << "--#{key.to_s.tr("_", "-")}" << value.to_s unless key == :snapshots
+        arguments << "--#{key.to_s.tr("_", "-")}" << value.to_s unless [:snapshots, :prune].include?(key)
       end
+
+      arguments << "--prune" if options[:prune]
 
       cmd = [executable] + command.to_s.split + arguments
       cmd << source if !source.nil?

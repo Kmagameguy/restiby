@@ -26,7 +26,9 @@ module Restiby
       def log
         log_file = File.join(File.expand_path("../../../..", __FILE__), "log", "restiby.log")
         content = File.read(log_file)
-        content.length > 2000 ? content[-2000..-1] : content
+        # Discord limits webhook payloads to 2000 characters.
+        # Need to truncate a bit more than that so we can insert the <pre> markdown formatting.
+        content.length > 1990 ? content[-1990..-1] : content
       end
     end
   end
