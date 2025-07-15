@@ -21,6 +21,7 @@ module Restiby
       backend.locations.each do |location|
         options = {}.tap do |opts|
           opts[:repo] = backend.path
+          opts[:tag] = location.tag
           opts[:exclude_file] = backend.exclude_file unless backend.exclude_file.nil?
         end
 
@@ -34,9 +35,16 @@ module Restiby
 
     def diff_latest!(backend)
       snapshots = latest_snapshots(backend)
-      return "Repository needs at least two snapshots to run this command..." if snapshots.count < 2
 
-      run!(command: DIFF, options: { repo: backend.path, snapshots: snapshots })
+      backend.locations.map do |location|
+        latest_snapshot = snapshots[location.tag]
+        return "Location #{location.name} needs at least two snapshots to calculate a diff!" if latest_snapshot["parent"].nil?
+
+        snapshots_to_diff = [ latest_snapshot["parent"], latest_snapshot["id"] ]
+        diff = run!(command: DIFF, options: { repo: backend.path, snapshots: snapshots_to_diff })
+
+        "\nDiff for #{location.name}\n#{diff}"
+      end.join("\n--------\n")
     end
 
     private
@@ -53,10 +61,15 @@ module Restiby
     end
 
     def latest_snapshots(backend)
-      JSON
-        .parse(run!(command: JSON_SNAPSHOTS, options: { repo: backend.path }))
-        .last(2)
-        .map { |snapshot| snapshot["id"]}
+      snapshots(backend)
+        .reject   { !it.keys.include?("tags") }
+        .map      { it.slice("parent", "tags", "id") }
+        .group_by { it["tags"][0] }
+        .transform_values { it.last }
+    end
+
+    def snapshots(backend)
+      JSON.parse(run!(command: JSON_SNAPSHOTS, options: { repo: backend.path }))
     end
 
     def run!(command:, options: {}, source: nil)
