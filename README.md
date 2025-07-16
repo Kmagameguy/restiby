@@ -43,11 +43,11 @@ Desired features are listed below.  Note that they are in no particular order of
 - [ ] Logo/Mascot
 - [ ] Auto-generate secure repository passkeys
 
+## Disclaimer
+This project is still in early development, so no warranties can be made regarding its safety or the integrity of the backups it creates.  Use at your own risk.  Test and validate your backups early and often!  This project is not affiliated with or endorsed by the restic project.
+
 [restic-backups]:https://restic.readthedocs.io
 [autorestic]:https://github.com/cupcakearmy/autorestic
 [backup-with-restic]:https://www.tomsquest.com/blog/2024/12/backup-restic-setup/
 [tomsquest]:https://github.com/tomsquest
 [backup-without-root]:https://restic.readthedocs.io/en/stable/080_examples.html#backing-up-your-system-without-running-restic-as-root
-
-## Disclaimer
-This project is still in early development, so no warranties can be made regarding its safety or the integrity of the backups it creates.  Use at your own risk.  Test and validate your backups early and often!
