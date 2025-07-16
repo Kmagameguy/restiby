@@ -39,7 +39,7 @@ module Restiby
     def init(backend = current_backend)
       return if File.exist?(File.join(backend.path, "config"))
 
-      logger.info("Initializing repository")
+      logger.info("Initializing repository: #{backend.name}")
       restic_command.init!(backend)
     end
 
