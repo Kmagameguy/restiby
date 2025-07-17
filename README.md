@@ -8,7 +8,7 @@ Inspiration comes from:
 
 ## Prerequisites
 1. The `restic` binary installed and in your `PATH`.
-1. A modern version of ruby (code was originally developed using the latest at time of writing, ruby 3.4.4)
+1. A modern version of ruby (code was originally developed using the latest at time of writing, ruby 3.4.5).
 
 Note that these utilities have only been tested on Linux. YMMV on macOS, or, *shudders*, Windows...
 
@@ -31,7 +31,13 @@ ruby restiby.rb --action backup
 1. Depending on which directories you're trying to access, you may get permission errors.  Restic's documentation provides a guide which explains how to allow the restic binary to perform rootless backups:
     - [Backing up your system without running restic as root][backup-without-root]
 1. This project is still WIP.  Some of the features that I plan to develop are listed below.
-1. In designing this repo I want the dependencies to remain lightweight.  Therefore I've avoided relying on gems and libraries that aren't part of the ruby core library.
+1. In designing this repo I want the dependencies to remain lightweight.  Therefore, aside from dev dependencies (see below) I've avoided relying on gems and libraries that aren't part of the ruby core library.  If you just want to run this scripts all you need is a base ruby install.
+
+## Developer Setup & Contributing
+All you need to get started is a base ruby install:
+1. Run `bin/dev-setup` to bootstrap the development environment.  This will install bundler if it's missing as well as the ruby gems specified in the project's `Gemfile`.
+1. Once dependencies are installed you're good to go.  You can run `bin/dev-test` as a litmus test -- if the tests all pass then your environment is good to go.
+1. Any time you pull new changes from the main branch you'll want to run `dev-update` to ensure you also pull in any new dependencies.  `dev-update` exists just for convenience/clarity -- it just calls `dev-setup` under the hood.
 
 ## Roadmap
 Desired features are listed below.  Note that they are in no particular order of importance.
