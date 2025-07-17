@@ -1,25 +1,5 @@
 # frozen_string_literal: true
 
-require "fileutils"
-require "json"
-require "logger"
-require "net/http"
-require "open3"
-require "optparse"
-require "ostruct"
-require "uri"
-require "yaml"
-require_relative "lib/restiby/constants/commands"
-require_relative "lib/restiby/multi_io"
-require_relative "lib/restiby/logger"
-require_relative "lib/restiby/location"
-require_relative "lib/restiby/backend"
-require_relative "lib/restiby/configuration"
-require_relative "lib/restiby/command"
-require_relative "lib/restiby/backup"
-require_relative "lib/restiby/notifiers/base"
-require_relative "lib/restiby/notifiers/discord"
-require_relative "lib/restiby/notifiers/healthchecks_io"
-require_relative "lib/restiby/parser"
+require_relative "./lib/restiby"
 
 Restiby::Parser.parse!
