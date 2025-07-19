@@ -3,7 +3,7 @@ module Restiby
     attr_reader :name, :type, :path, :passkey, :locations, :exclude_file
 
     def initialize(name:, properties: {}, all_locations: {}, exclude_file: nil)
-      @name = name
+      @name = name.to_sym
       @type = properties[:type]
       @path = properties[:path]
       @passkey = properties[:passkey]
@@ -14,7 +14,7 @@ module Restiby
     private
 
     def extract_locations(all_locations)
-      all_locations.select { |location| location.destinations.include?(name) }
+      Array(all_locations).select { |location| location.destinations.include?(name) }
     end
   end
 end

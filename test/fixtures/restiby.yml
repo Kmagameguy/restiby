@@ -1,0 +1,20 @@
+backends:
+  localstorage:
+    type: local
+    path: "/tmp/files"
+    passkey: a-random-passkey
+
+extras:
+  exclude_file: .restiby.exclude
+
+locations:
+  documents:
+    from: ./
+    to:
+      - localstorage
+
+notifiers:
+  healthchecks_io:
+    webhook_url: "https://www.example.com/healthchecks"
+  discord:
+    webhook_url: "https://www.example.com/discord"
