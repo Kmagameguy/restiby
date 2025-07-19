@@ -19,6 +19,16 @@ require_relative "../lib/restiby"
 
 Bundler.setup(:default, :test)
 
+# Mock RSpec-style context blocks
+class ::Minitest::Test
+  extend Minitest::Spec::DSL
+
+  class << self
+    alias context describe
+  end
+end
+
+
 def stub_configuration
   ::Restiby::Configuration.any_instance.stubs(:root_dir).returns(fixtures_path)
 end
