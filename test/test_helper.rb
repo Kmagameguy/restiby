@@ -18,3 +18,11 @@ require "yaml"
 require_relative "../lib/restiby"
 
 Bundler.setup(:default, :test)
+
+def stub_configuration
+  ::Restiby::Configuration.any_instance.stubs(:root_dir).returns(fixtures_path)
+end
+
+def fixtures_path
+  File.join(File.expand_path("../", __FILE__), "fixtures")
+end

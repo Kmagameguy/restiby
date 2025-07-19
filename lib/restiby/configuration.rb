@@ -23,8 +23,8 @@ module Restiby
     attr_reader :all_locations
 
     def build_locations(location_hash)
-      location_hash.map do |location_name, location_properties|
-        Location.new(name: location_name, properties: location_properties)
+      location_hash.map do |name, properties|
+        Location.new(name:, properties:)
       end
     end
 
