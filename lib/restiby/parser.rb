@@ -3,15 +3,15 @@ module Restiby
     include ::Restiby::Constants::Commands
 
     def self.parse!
-      options = {}
-      parser = OptionParser.new do |opts|
-        opts.banner = "usage: restiby.rb [options]"
-        opts.on("-aACTION", "--action=ACTION", "Action to perform") do |action|
-          options[:action] = action
-        end
-      end
+      new.parse!
+    end
 
-      parser.parse!
+    def initialize
+      @options = {}
+    end
+
+    def parse!
+      input.parse!
 
       case options[:action]
       when BACKUP
@@ -22,7 +22,20 @@ module Restiby
         # Restiby::Restore.run!
       else
         raise ArgumentError, "Unknown action: #{options[:action]}"
-      end 
+      end
+    end
+
+    private
+
+    attr_reader :options
+
+    def input
+      OptionParser.new do |opts|
+        opts.banner = "usage: restiby.rb [options]"
+        opts.on("-aACTION", "--action=ACTION", "Action to perform") do |action|
+          options[:action] = action&.downcase&.strip
+        end
+      end
     end
   end
 end
