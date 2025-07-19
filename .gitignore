@@ -3,6 +3,7 @@ Gemfile.lock
 .restiby.exclude
 log/**/*
 restiby.yml
+**test/tmp/*.log
 
 !*.gitkeep
 !**/fixtures/restiby.yml
