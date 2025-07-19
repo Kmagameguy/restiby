@@ -38,7 +38,7 @@ module Restiby
 
       backend.locations.map do |location|
         latest_snapshot = snapshots[location.tag]
-        return "Location #{location.name} needs at least two snapshots to calculate a diff!" if latest_snapshot["parent"].nil?
+        next "Location #{location.name} needs at least two snapshots to calculate a diff!" if latest_snapshot&.dig("parent").nil?
 
         snapshots_to_diff = [ latest_snapshot["parent"], latest_snapshot["id"] ]
         diff = run!(command: DIFF, options: { repo: backend.path, snapshots: snapshots_to_diff })
