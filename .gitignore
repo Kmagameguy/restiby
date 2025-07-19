@@ -5,3 +5,5 @@ log/**/*
 restiby.yml
 
 !*.gitkeep
+!**/fixtures/restiby.yml
+!**/fixtures/.restiby.exclude
