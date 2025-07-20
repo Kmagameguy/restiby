@@ -7,7 +7,7 @@ module Restiby
       new.run!
     end
 
-    def initialize(logger: ::Restiby::Logger.new, config: Configuration.load!, restic_command: Command.new)
+    def initialize(logger: ::Restiby::Logger.new, config: ::Restiby::Configuration.load!, restic_command: ::Restiby::Command.new)
       @logger = logger
       @config = config
       @restic_command = restic_command

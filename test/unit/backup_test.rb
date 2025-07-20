@@ -4,20 +4,25 @@ require "test_helper"
 
 module Restiby
   class BackupTest < ::Minitest::Test
+    include RestibyTestHelpers
+
     describe "Backup" do
-      before { stub_configuration }
+      before do
+        stub_configuration
+        stub_restic_binary
+      end
 
       describe ".run!" do
         it "creates a new instance of the Backup class and calls its :run! instance method" do
-          Backup.any_instance.expects(:run!).once
-          Backup.run!
+          Restiby::Backup.any_instance.expects(:run!).once
+          Restiby::Backup.run!
         end
       end
 
       describe "#run!" do
         before do
-          @backup = Backup.new
-          Logger.any_instance.expects(:reset).once
+          @backup = Restiby::Backup.new
+          Restiby::Logger.any_instance.expects(:reset).once
           @backup.expects(:update_restic).once
           @backup.expects(:init).at_least_once
           @backup.expects(:backup).at_least_once
@@ -25,7 +30,7 @@ module Restiby
           @backup.expects(:forget).at_least_once
           @backup.expects(:diff_latest).at_least_once
           @backup.expects(:notify_success).at_least_once
-          Logger.any_instance.expects(:info).with("Run completed.").once
+          Restiby::Logger.any_instance.expects(:info).with("Run completed.").once
         end
 
         it "runs the automated backup routine" do
@@ -40,7 +45,7 @@ module Restiby
 
       describe "#update_restic" do
         it "calls the update command" do
-          backup = Backup.new
+          backup = Restiby::Backup.new
           logger = backup.send(:logger)
           restic_command = backup.send(:restic_command)
 
@@ -54,7 +59,7 @@ module Restiby
       describe "#init" do
         context "when the repo already exists" do
           it "does nothing" do
-            backup = Backup.new
+            backup = Restiby::Backup.new
             backend = backup.send(:config).backends.first
             logger = backup.send(:logger)
             restic_command = backup.send(:restic_command)
@@ -69,7 +74,7 @@ module Restiby
 
         context "when the repo does not exist" do
           it "creates the repo" do
-            backup = Backup.new
+            backup = Restiby::Backup.new
             backend = backup.send(:config).backends.first
             logger = backup.send(:logger)
             restic_command = backup.send(:restic_command)
@@ -85,7 +90,7 @@ module Restiby
 
       describe "#backup" do
         it "runs the backup command for the given backend" do
-          backup = Backup.new
+          backup = Restiby::Backup.new
           backend = backup.send(:config).backends.first
           logger = backup.send(:logger)
           restic_command = backup.send(:restic_command)
@@ -100,7 +105,7 @@ module Restiby
 
       describe "#check" do
         it "runs the check command for the given backend" do
-          backup = Backup.new
+          backup = Restiby::Backup.new
           backend = backup.send(:config).backends.first
           logger = backup.send(:logger)
           restic_command = backup.send(:restic_command)
@@ -116,7 +121,7 @@ module Restiby
       describe "#forget" do
         context "when a backend location has a forget policy" do
           it "forgets snapshots" do
-            backup = Backup.new
+            backup = Restiby::Backup.new
             backend = backup.send(:config).backends.first
             logger = backup.send(:logger)
             restic_command = backup.send(:restic_command)
@@ -132,7 +137,7 @@ module Restiby
         
         context "when a forget policy is not specified for any of the backend locations" do
           it "does nothing" do
-            backup = Backup.new
+            backup = Restiby::Backup.new
             backend = backup.send(:config).backends.first
             logger = backup.send(:logger)
             restic_command = backup.send(:restic_command)
@@ -148,7 +153,7 @@ module Restiby
 
       describe "#diff_latest" do
         it "checks the difference between the latest repo snapshots" do
-          backup = Backup.new
+          backup = Restiby::Backup.new
           backend = backup.send(:config).backends.first
           logger = backup.send(:logger)
           restic_command = backup.send(:restic_command)
@@ -163,7 +168,7 @@ module Restiby
 
       describe "#notify_success" do
         it "notifies all the configured services" do
-          backup = Backup.new
+          backup = Restiby::Backup.new
           notifiers = backup.send(:config).notifiers
           notifiers.each { it.expects(:notify_success!).once }
 
