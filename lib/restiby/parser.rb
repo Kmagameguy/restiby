@@ -17,7 +17,7 @@ module Restiby
       when BACKUP
         Restiby::Backup.run!
       when CHECK
-        # Restiby::Check.run!
+        Restiby::Check.run!
       when RESTORE
         # Restiby::Restore.run!
       else
