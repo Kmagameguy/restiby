@@ -5,6 +5,7 @@ Restiby (restic + ruby) is a collection of ruby-based helper utilities that make
 Inspiration comes from:
   - [autorestic][autorestic], which, at time of writing (July 2025) may be a dormant project?  I also prefer ruby over golang.
   - This blog post, [Backup with Restic][backup-with-restic] by [Thomas Queste][tomsquest], who also maintains a pretty fabulous `docker-radicale` project.
+  - A general desire to automate restic backups for multiple machines/locations with built-in integrity checking.  Restic is a fabulous and flexible tool, but the flexibility comes at the expense of a somewhat obtuse CLI tool, IMO.  E.g. either specifying the target repository and password(s) through cli flags for EVERY command or through env variables (woof).
 
 ## Prerequisites
 1. The `restic` binary installed and in your `PATH`.
@@ -24,8 +25,23 @@ Note that these utilities have only been tested on Linux. YMMV on macOS, or, *sh
   - Notify any configured clients on success (e.g. Discord or Healthchecks.io)
 
 ```bash
-ruby restiby.rb --action backup
+./restiby --action backup
 ```
+
+You can also add a symlink to `/usr/local/bin/` by running the included install script:
+
+```bash
+bin/install
+```
+
+This will let you call the restiby script from anywhere on your system:
+
+```
+cd $HOME
+restiby --action backup
+```
+
+To uninstall it, just delete the symlink from `/usr/local/bin`.
 
 ## Notes
 1. Depending on which directories you're trying to access, you may get permission errors.  Restic's documentation provides a guide which explains how to allow the restic binary to perform rootless backups:
@@ -45,7 +61,6 @@ Desired features are listed below.  Note that they are in no particular order of
 - [ ] Cloud-based backups
 - [ ] E-mail Notifications
 - [ ] Snapshot browsing/content management
-- [ ] Test Suite
 - [ ] Logo/Mascot
 - [ ] Auto-generate secure repository passkeys
 
