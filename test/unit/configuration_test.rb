@@ -4,6 +4,8 @@ require "test_helper"
 
 module Restiby
   class ConfigurationTest < ::Minitest::Test
+    include RestibyTestHelpers
+
     describe "Configuration" do
       before { stub_configuration }
 

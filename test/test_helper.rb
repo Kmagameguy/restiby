@@ -29,10 +29,16 @@ class ::Minitest::Test
 end
 
 
-def stub_configuration
-  ::Restiby::Configuration.any_instance.stubs(:root_dir).returns(fixtures_path)
-end
+module RestibyTestHelpers
+  def stub_configuration
+    ::Restiby::Configuration.any_instance.stubs(:root_dir).returns(fixtures_path)
+  end
 
-def fixtures_path
-  File.join(File.expand_path("../", __FILE__), "fixtures")
+  def stub_restic_binary
+    ::Restiby::Command.any_instance.stubs(:find_restic_binary).returns("/usr/bin/restic")
+  end
+
+  def fixtures_path
+    File.join(File.expand_path("../", __FILE__), "fixtures")
+  end
 end
