@@ -2,6 +2,8 @@
 
 module Restiby
   class Backup
+    include ::Restiby::Concerns::EnvManager
+
     # Convenience method to just run w/defaults
     def self.run!
       new.run!
@@ -18,16 +20,19 @@ module Restiby
       logger.reset
       update_restic
       config.backends.each do |backend|
-        self.current_backend = backend
-        update_passkey_in_env(current_backend.passkey)
+        begin
+          self.current_backend = backend
+          update_passkey_in_env(current_backend.passkey)
 
-        init
-        backup
-        check
-        forget
-        diff_latest
-        notify_success
-        update_passkey_in_env(nil)
+          init
+          backup
+          check
+          forget
+          diff_latest
+          notify_success
+        ensure
+          unset_passkey
+        end
       end
       logger.info("Run completed.")
     end
@@ -74,10 +79,6 @@ module Restiby
     end
 
     private
-
-    def update_passkey_in_env(passkey)
-      ENV["RESTIC_PASSWORD"] = passkey
-    end
 
     attr_accessor :current_backend
     attr_reader :logger, :config, :restic_command
