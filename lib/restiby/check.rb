@@ -18,12 +18,9 @@ module Restiby
     def run!
       logger.reset
       config.backends.each do |backend|
-        begin
-          self.current_backend = backend
-          update_passkey_in_env(backend.passkey)
+        self.current_backend = backend
+        with_passkey(current_backend.passkey) do
           check
-        ensure
-          unset_passkey
         end
       end
     end
