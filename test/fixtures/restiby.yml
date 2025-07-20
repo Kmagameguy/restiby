@@ -12,6 +12,8 @@ locations:
     from: ./
     to:
       - localstorage
+    forget:
+      keep_last: 7
 
 notifiers:
   healthchecks_io:

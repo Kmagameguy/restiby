@@ -19,7 +19,7 @@ module Restiby
       update_restic
       config.backends.each do |backend|
         self.current_backend = backend
-        ENV["RESTIC_PASSWORD"] = current_backend.passkey
+        update_passkey_in_env(current_backend.passkey)
 
         init
         backup
@@ -27,6 +27,7 @@ module Restiby
         forget
         diff_latest
         notify_success
+        update_passkey_in_env(nil)
       end
       logger.info("Run completed.")
     end
@@ -73,6 +74,10 @@ module Restiby
     end
 
     private
+
+    def update_passkey_in_env(passkey)
+      ENV["RESTIC_PASSWORD"] = passkey
+    end
 
     attr_accessor :current_backend
     attr_reader :logger, :config, :restic_command
