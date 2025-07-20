@@ -20,18 +20,14 @@ module Restiby
       logger.reset
       update_restic
       config.backends.each do |backend|
-        begin
-          self.current_backend = backend
-          update_passkey_in_env(current_backend.passkey)
-
+        self.current_backend = backend
+        with_passkey(current_backend.passkey) do
           init
           backup
           check
           forget
           diff_latest
           notify_success
-        ensure
-          unset_passkey
         end
       end
       logger.info("Run completed.")
