@@ -38,7 +38,7 @@ module Restiby
             @backup.expects(:update_passkey_in_env).with(backend.passkey).once
           end
 
-          @backup.expects(:update_passkey_in_env).with(nil).at_least_once
+          @backup.expects(:unset_passkey).at_least_once
           @backup.run!
         end
       end
