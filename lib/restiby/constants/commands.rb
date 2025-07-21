@@ -21,6 +21,7 @@ module Restiby
         DIFF,
         FORGET,
         INIT,
+        RESTORE,
         SELF_UPDATE,
         JSON_SNAPSHOTS,
         VERSION,

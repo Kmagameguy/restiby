@@ -122,10 +122,6 @@ module Restiby
             [@executable] +
             Restiby::Constants::Commands::JSON_SNAPSHOTS.split +
             ["-v", "--repo", @backend.path]
-          @expected_snapshot_command = 
-            [@executable] +
-            Restiby::Constants::Commands::JSON_SNAPSHOTS.split +
-            ["-v", "--repo", @backend.path]
         end
 
         context "when there are at least 2 snapshots for the given backend" do
@@ -218,6 +214,66 @@ module Restiby
 
             @command.expects(:run!).never
             @command.forget!(backend)
+          end
+        end
+      end
+
+      describe "#restore_latest!" do
+        before do
+          @location1 = Location.new(name: "documents", properties: { from: "/mnt/storage/documents", to: ["home"] })
+          @location2 = Location.new(name: "downloads", properties: { from: "/mnt/storage/downloads", to: ["home"] })
+          @backend   = Backend.new(name: "home", properties: { path: "/home/my_user" }, all_locations: [@location1, @location2])
+          @expected_snapshot_command =
+            [@executable] +
+            Restiby::Constants::Commands::JSON_SNAPSHOTS.split +
+            ["-v", "--repo", @backend.path]
+        end
+
+        it "restores the latest snapshot data for each backend location to the specified directory" do
+          location1_latest_snapshot_id = "111111111"
+          location2_latest_snapshot_id = "222222222"
+          expected_location1_system_command = [
+            @executable,
+            Restiby::Constants::Commands::RESTORE,
+            location1_latest_snapshot_id,
+            "-v",
+            "--repo", @backend.path,
+            "--target", Restiby::Restore::DEFAULT_RESTORE_PATH
+          ]
+          expected_location2_system_command = [
+            @executable,
+            Restiby::Constants::Commands::RESTORE,
+            location2_latest_snapshot_id,
+            "-v",
+            "--repo", @backend.path,
+            "--target", Restiby::Restore::DEFAULT_RESTORE_PATH
+          ]
+
+          @command.expects(:system!)
+            .with(*@expected_snapshot_command)
+            .returns([
+              {
+                "tags" => ["restiby:location:documents"],
+                "parent" => "",
+                "id" => location1_latest_snapshot_id
+              },
+              {
+                "tags" => ["restiby:location:downloads"],
+                "parent" => "",
+                "id" => location2_latest_snapshot_id
+              }
+            ].to_json)
+
+          @command.expects(:system!).with(*expected_location1_system_command).once
+          @command.expects(:system!).with(*expected_location2_system_command).once
+          @command.restore_latest!(backend: @backend)
+        end
+
+        it "raises an error if there are no snapshots in the repository" do
+          @command.stubs(:latest_snapshots).with(@backend).returns({})
+
+          assert_raises(StandardError, "No snapshots found to restore.") do
+            @command.restore_latest!(@backend)
           end
         end
       end

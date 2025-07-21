@@ -55,6 +55,15 @@ module Restiby
       end.compact.join("\n---------\n")
     end
 
+    def restore_latest!(backend:, restore_path: Restiby::Restore::DEFAULT_RESTORE_PATH)
+      snapshots_to_restore = latest_snapshots(backend)
+      raise StandardError, "No snapshots found to restore." if snapshots_to_restore.nil? || snapshots_to_restore.empty?
+
+      snapshots_to_restore.values.each do |snapshot|
+        run!(command: RESTORE, options: { repo: backend.path, snapshot_target: snapshot["id"], target: restore_path })
+      end
+    end
+
     private
 
     attr_reader :executable
@@ -86,12 +95,14 @@ module Restiby
       arguments = [ "-v" ]
 
       options.each do |key, value|
-        arguments << "--#{key.to_s.tr("_", "-")}" << value.to_s unless [:snapshots, :prune].include?(key)
+        arguments << "--#{key.to_s.tr("_", "-")}" << value.to_s unless [:snapshots, :prune, :snapshot_target].include?(key)
       end
 
       arguments << "--prune" if options[:prune]
 
-      cmd = [executable] + command.to_s.split + arguments
+      cmd = [executable] + command.to_s.split
+      cmd << options[:snapshot_target] if !options[:snapshot_target].nil?
+      cmd += arguments
       cmd << source if !source.nil?
       cmd += options[:snapshots] if !options[:snapshots].nil? && !options[:snapshots].empty?
 
