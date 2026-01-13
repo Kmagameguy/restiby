@@ -1,5 +1,8 @@
 source "https://rubygems.org"
 
+gem "logger"
+gem "ostruct"
+
 group :test do
   gem "rake"
   gem "minitest"
